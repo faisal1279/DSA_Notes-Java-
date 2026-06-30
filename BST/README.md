@@ -1,184 +1,276 @@
-🌳 Binary Search Tree (BST) - Concept Notes
-1. BST Implementation (Search, Insert, Min, Max, Count)
-🔹 Search
-Compare current node with target.
-If equal → Found.
-If target smaller → Go Left.
-If target greater → Go Right.
+# 🌳 Binary Search Tree (BST) - Concept Notes
 
-Remember: Only one path is visited.
+A **Binary Search Tree (BST)** is a special type of Binary Tree where:
 
-🔹 Insert (Recursive)
-Reach a null position.
-Create new node.
-Return node.
-Parent automatically connects through recursion.
-small -> left
-large -> right
-null -> create node
-🔹 Insert (Without Return)
-Traverse until left/right becomes null.
-Attach new node there.
-🔹 Minimum
+- Every node in the **left subtree** is smaller than the root.
+- Every node in the **right subtree** is greater than the root.
 
-Go left until left becomes null.
+> **Golden Rule:** `Left < Root < Right`
 
+---
+
+# 📚 Topics Covered
+
+- BST Implementation (Search, Insert, Min, Max, Count)
+- Kth Smallest Element
+- Lowest Common Ancestor (LCA)
+- Convert BST to Greater Sum Tree
+- Sorted Array to BST
+- Validate BST
+- Largest BST in a Binary Tree
+- Maximum Sum BST
+- Morris Traversal
+- Validate BST using Morris Traversal
+- Delete Node (Leaf, One Child, Two Children)
+
+---
+
+# 1️⃣ BST Implementation
+
+## 🔍 Search
+
+### Idea
+
+Compare the current node with the target value.
+
+- Equal → Found
+- Target < Root → Move Left
+- Target > Root → Move Right
+
+### Key Observation
+
+✅ Only one path is visited.
+
+---
+
+## ➕ Insert (Recursive)
+
+### Steps
+
+1. Reach a `null` node.
+2. Create a new node.
+3. Return the node.
+4. Parent automatically connects through recursion.
+
+### Rule
+
+```text
+Small → Left
+Large → Right
+Null → Create Node
+```
+
+---
+
+## ➕ Insert (Iterative)
+
+Traverse until the left or right child becomes `null`, then attach the new node.
+
+---
+
+## 📉 Find Minimum
+
+Move to the **leftmost node**.
+
+```text
 while(left != null)
     left
-🔹 Maximum
+```
 
-Go right until right becomes null.
+---
 
+## 📈 Find Maximum
+
+Move to the **rightmost node**.
+
+```text
 while(right != null)
     right
-🔹 Count Nodes in Range [L,H]
+```
 
-Idea:
+---
 
+## 🔢 Count Nodes in Range [L, H]
+
+### Idea
+
+If
+
+```text
 root < L
-Skip Left
+```
 
+Skip the left subtree.
+
+If
+
+```text
 root > H
-Skip Right
+```
+
+Skip the right subtree.
 
 Otherwise
-Count current
-Search both sides
 
-Uses BST property to prune unnecessary nodes.
+- Count current node
+- Search both subtrees
 
-2. Kth Smallest Element
-Method-1 (Extra Space)
-Do inorder.
-Store values.
-Return k-1 index.
-BST Inorder = Sorted Array
-Method-2 (Better)
+### Pattern
 
-No extra array.
+Uses the BST property to prune unnecessary branches.
 
+---
+
+# 2️⃣ Kth Smallest Element
+
+## Method 1 (Extra Space)
+
+- Perform Inorder Traversal
+- Store values in an array
+- Return `k - 1` index
+
+### Observation
+
+✅ BST Inorder = Sorted Array
+
+---
+
+## Method 2 (Optimal)
+
+No extra array required.
+
+```text
 Inorder
-↓
-
+   ↓
 Decrease k
-
-↓
-
-k==0
-
-↓
-
+   ↓
+k == 0
+   ↓
 Answer Found
-3. Lowest Common Ancestor (BST)
+```
 
-Use BST property.
+---
 
-Both smaller
-↓
+# 3️⃣ Lowest Common Ancestor (BST)
 
+Uses the BST property.
+
+```text
+Both Smaller
+      ↓
 Go Left
 
-Both greater
-↓
-
+Both Greater
+      ↓
 Go Right
 
 Otherwise
+Current Node = LCA
+```
 
-Current node is LCA
+✅ Only one path is visited.
 
-Only one path is visited.
+---
 
-4. Convert BST → Greater Sum Tree
-Core Idea
+# 4️⃣ Convert BST → Greater Sum Tree
 
-Reverse Inorder
+## Core Idea
 
+Perform **Reverse Inorder Traversal**
+
+```text
 Right
-
-↓
-
+ ↓
 Root
-
-↓
-
+ ↓
 Left
+```
 
-Keep a running sum.
+Maintain a running sum.
 
-sum += root.val
+```java
+sum += root.val;
+root.val = sum;
+```
 
-root.val = sum
+### Why?
 
 Because larger values are visited first.
 
-Alternate Method
-Reverse inorder
-Store nodes
-Traverse array
-Prefix sum
-Update nodes
+---
 
-Uses extra space.
+## Alternative Method
 
-5. Sorted Array → BST
+- Reverse Inorder
+- Store nodes
+- Prefix Sum
+- Update nodes
 
-Goal:
+Uses extra memory.
 
-Balanced BST.
+---
 
+# 5️⃣ Sorted Array → BST
+
+## Goal
+
+Build a **Balanced BST**.
+
+```text
 Middle
+   ↓
+ Root
 
-↓
+Left Half      Right Half
+     ↓              ↓
+ Left Tree     Right Tree
+```
 
-Root
+### Rule
 
-Left Half
+Always choose the middle element as the root.
 
-↓
+---
 
-Left Subtree
+# 6️⃣ Validate BST
 
-Right Half
-
-↓
-
-Right Subtree
-
-Always choose middle element.
-
-6. Validate BST (Bottom-Up)
+## Bottom-Up Approach
 
 Return
 
-Maximum
-Minimum
+- Maximum
+- Minimum
 
-Every node checks
+Every node checks:
 
+```text
 Left Max < Root
 
 AND
 
 Right Min > Root
+```
 
-If any node fails
+If any condition fails
 
-flag = false
-7. Largest BST Size
+```text
+Not a BST
+```
 
-Return 4 things
+---
 
-Maximum
+# 7️⃣ Largest BST
 
-Minimum
+Return four values:
 
-Size
+- Maximum
+- Minimum
+- Size
+- isBST
 
-isBST
+Current subtree is BST only if:
 
-Current subtree is BST only if
-
+```text
 Left BST
 
 AND
@@ -192,84 +284,63 @@ Left Max < Root
 AND
 
 Right Min > Root
+```
 
-If BST
+If valid:
 
+```text
 size = left + right + 1
+```
 
-Update maxSize
-8. Maximum Sum BST
+Update:
 
-Almost same as Largest BST.
+```text
+maxSize
+```
 
-Instead of size
+---
 
-Return
+# 8️⃣ Maximum Sum BST
 
-Sum
+Very similar to Largest BST.
 
-If subtree is BST
+Instead of Size,
 
+Return:
+
+- Sum
+
+If subtree is BST:
+
+```text
 sum = left + right + root
+```
 
-Update maxSum
-9. Morris Traversal
+Update
 
-Goal
+```text
+maxSum
+```
 
-Inorder
+---
 
-Without Stack
+# 9️⃣ Morris Traversal
 
-Without Recursion
+## Goal
 
-O(1) Space
+- Inorder Traversal
+- No Stack
+- No Recursion
+- **O(1) Space**
 
-Algorithm
+### Algorithm
 
-curr = root
-
-↓
-
-If left is null
-
-Print
-
-Move Right
-
-Else
-
-Find predecessor
-
-(Rightmost node of left subtree)
+```text
+Current = Root
 
 ↓
 
-If thread not created
-
-pred.right = curr
-
-Move Left
-
-↓
-
-Else
-
-Remove thread
-
-Print current
-
-Move Right
-
-Remember
-
-Thread Create
-
-↓
-
-Go Left
-
-Thread Remove
+Left == null ?
 
 ↓
 
@@ -277,103 +348,145 @@ Visit Node
 
 ↓
 
-Go Right
-10. Validate BST using Morris Traversal
+Move Right
 
-Same Morris traversal.
-
-Extra variable
-
-prev
-
-During inorder
-
-if(prev >= curr.val)
-
-Not BST
-
-Because inorder of BST must be strictly increasing.
-
-11. Delete Node (Leaf)
-
-Found target
+Else
 
 ↓
 
-Simply return
+Find Predecessor
 
-null
+↓
 
-Parent automatically disconnects through recursion.
+Thread Exists?
 
-12. Delete Node (One Child)
+↓
 
-Found target
+No
+Create Thread
+Move Left
 
-If only left exists
+Yes
+Remove Thread
+Visit Node
+Move Right
+```
 
+---
+
+# 🔟 Validate BST using Morris Traversal
+
+Same Morris Traversal.
+
+Maintain a variable:
+
+```text
+prev
+```
+
+During inorder traversal:
+
+```text
+prev >= current
+```
+
+↓
+
+Not BST
+
+### Reason
+
+BST Inorder must always be **strictly increasing**.
+
+---
+
+# 1️⃣1️⃣ Delete Leaf Node
+
+Found target.
+
+```text
+Return null
+```
+
+Parent disconnects automatically.
+
+---
+
+# 1️⃣2️⃣ Delete Node with One Child
+
+If only left child exists:
+
+```text
 return left
+```
 
-If only right exists
+If only right child exists:
 
+```text
 return right
+```
 
 Parent reconnects automatically.
 
-13. Delete Node (Two Children)
+---
+
+# 1️⃣3️⃣ Delete Node with Two Children
 
 Most important delete case.
 
-Steps
-
-Find predecessor
+```text
+Find Inorder Predecessor
 (Maximum in Left Subtree)
 
 ↓
 
-Delete predecessor
+Delete Predecessor
 
 ↓
 
-Attach
-
-pred.left
-
-pred.right
+Attach Left & Right Subtrees
 
 ↓
 
-Return predecessor
+Return Predecessor
+```
 
-Predecessor becomes new root of that subtree.
+The predecessor becomes the new root of that subtree.
 
+---
 
+# ⭐ BST Golden Rules
 
-⭐ BST Golden Rules
+- ✅ Left < Root < Right
+- ✅ Inorder = Sorted Order
+- ✅ Reverse Inorder = Descending Order
+- ✅ Leftmost Node = Minimum
+- ✅ Rightmost Node = Maximum
+- ✅ Search / Insert / Delete → Only One Path
+- ✅ Morris Traversal = O(1) Space
+- ✅ LCA uses BST Property
+- ✅ Greater Sum Tree → Reverse Inorder
+- ✅ Sorted Array → Middle becomes Root
+- ✅ Largest BST & Maximum Sum BST → Bottom-Up DP
 
-✅ Left < Root < Right
+---
 
-✅ Inorder = Sorted
+# 📄 Handwritten Notes (PDF)
 
-✅ Reverse Inorder = Descending
+I have also prepared handwritten notes with Java implementations and detailed explanations for quick revision.
 
-✅ Leftmost = Minimum
+📥 **Download PDF:**
 
-✅ Rightmost = Maximum
+**https://drive.google.com/file/d/1J31iAKnpPpyxkg0HUTjUG-sFbOTwfsol/view?usp=drive_link**
 
-✅ Search / Insert / Delete → One Path
+---
 
-✅ Morris = O(1) Space
+# 💻 Language
 
-✅ LCA uses BST property
+- Java
 
-✅ Greater Sum Tree = Reverse Inorder
+---
 
-✅ Sorted Array → Middle becomes Root
+# 🚀 Goal
 
-✅ Largest BST / Max Sum BST → Bottom-up DP (return max, min, size/sum, isBST)
-
-
-## 📄 Full Notes PDF
-
-👉 https://drive.google.com/file/d/1J31iAKnpPpyxkg0HUTjUG-sFbOTwfsol/view?usp=drive_link
+The objective of this repository is to understand **BST concepts**, recognize **problem-solving patterns**, and build strong interview fundamentals instead of memorizing code.
